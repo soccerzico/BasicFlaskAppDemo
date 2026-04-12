@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 import sqlite3
 import os
+from datetime import date
 
 app = Flask(__name__)
 
@@ -156,7 +157,7 @@ def add_review():
         cursor = conn.cursor()
 
         cursor.execute("""
-    INSERT INTO Reviews (book_id, user, rating, review_text, review_date)
+    INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date)
     VALUES (?, ?, ?, ?, ?)
 """, (book_id, user, rating, comment, date.today().isoformat()))
 
