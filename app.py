@@ -58,11 +58,11 @@ def search_books():
         book_list = []
         for book in books:
             book_dict = {
-                'book_id': book[0],
-                'title': book[1],
-                'publication_year': book[2],
-                'book_author': book[3],
-                'url': book[4]
+                'book_id': book[1],
+                'title': book[2],
+                'publication_year': book[3],
+                'book_author': book[4],
+                'url': book[5]
             }
             book_list.append(book_dict)
 
