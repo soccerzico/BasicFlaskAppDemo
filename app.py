@@ -39,16 +39,16 @@ def init_db():
 
         seed_reviews = [
             # Harry Potter
-            ("1", "Alice", 5, "Amazing world-building and characters!"),
-            ("1", "Bob", 4, "Loved it, but a bit slow at times."),
+            ("1", "Alice", 5, "Amazing world-building and characters!", "2026-04-12"),
+            ("1", "Bob", 4, "Loved it, but a bit slow at times.", "2026-04-12"),
             
             # Maze Runner
-            ("2", "Charlie", 4, "Very suspenseful and intense."),
-            ("2", "Dana", 3, "Interesting concept but confusing at times."),
+            ("2", "Charlie", 4, "Very suspenseful and intense.", "2026-04-12"),
+            ("2", "Dana", 3, "Interesting concept but confusing at times.", "2026-04-12"),
             
             # Percy Jackson
-            ("3", "Eve", 5, "Super fun and creative mythology twist!"),
-            ("3", "Frank", 4, "Great for younger audiences, still enjoyable.")
+            ("3", "Eve", 5, "Super fun and creative mythology twist!", "2026-04-12"),
+            ("3", "Frank", 4, "Great for younger audiences, still enjoyable.", "2026-04-12")
         ]
 
     cursor.executemany("""INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date) VALUES (?, ?, ?, ?, ?) """, seed_reviews)
