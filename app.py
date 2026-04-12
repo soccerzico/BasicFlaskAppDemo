@@ -28,7 +28,7 @@ def init_db():
         review_text TEXT,
         review_date DATE
     )
-    """)
+""")
 
     # Check if table is empty
     cursor.execute("SELECT COUNT(*) FROM Reviews")
@@ -98,9 +98,9 @@ def add_review():
         cursor = conn.cursor()
 
         cursor.execute("""
-        INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date)
-        VALUES (?, ?, ?, ?, ?)
-        """, (book_id, user_id, rating, comment, date.today().isoformat()))
+    INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date)
+    VALUES (?, ?, ?, ?, ?)
+""", (book_id, user_id, rating, comment, date.today().isoformat()))
 
         conn.commit()
         conn.close()
