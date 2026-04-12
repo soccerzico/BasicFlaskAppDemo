@@ -19,14 +19,15 @@ def init_db():
     cursor = conn.cursor()
 
     # Create Reviews table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Reviews (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            book_id TEXT NOT NULL,
-            user TEXT NOT NULL,
-            rating INTEGER NOT NULL,
-            comment TEXT
-        )
+   cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Reviews (
+        review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        book_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        rating INTEGER,
+        review_text TEXT,
+        review_date DATE
+    )
     """)
 
     # Check if table is empty
@@ -50,10 +51,7 @@ def init_db():
             ("3", "Frank", 4, "Great for younger audiences, still enjoyable.")
         ]
 
-        cursor.executemany("""
-            INSERT INTO Reviews (book_id, user, rating, comment)
-            VALUES (?, ?, ?, ?)
-        """, seed_reviews)
+    cursor.executemany("""INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date) VALUES (?, ?, ?, ?, ?) """, seed_reviews)
 
     conn.commit()
     conn.close()
@@ -65,7 +63,7 @@ def get_all_reviews():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT book_id, user, rating, comment FROM Reviews")
+        cursor.execute("""SELECT review_id, book_id, user_id, rating, review_text, review_date FROM Reviews""") 
         rows = cursor.fetchall()
         conn.close()
 
@@ -100,9 +98,9 @@ def add_review():
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO Reviews (book_id, user, rating, comment)
-            VALUES (?, ?, ?, ?)
-        """, (book_id, user, rating, comment))
+        INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date)
+        VALUES (?, ?, ?, ?, ?)
+        """, (book_id, user_id, rating, comment, date.today().isoformat()))
 
         conn.commit()
         conn.close()
