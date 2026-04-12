@@ -51,7 +51,7 @@ def init_db():
             ("3", "Frank", 4, "Great for younger audiences, still enjoyable.", "2026-04-12")
         ]
 
-            cursor.executemany("""INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date) VALUES (?, ?, ?, ?, ?) """, seed_reviews)
+        cursor.executemany("""INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date) VALUES (?, ?, ?, ?, ?) """, seed_reviews)
 
     conn.commit()
     conn.close()
