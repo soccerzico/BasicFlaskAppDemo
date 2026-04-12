@@ -19,7 +19,7 @@ def init_db():
     cursor = conn.cursor()
 
     # Create Reviews table
-   cursor.execute("""
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS Reviews (
         review_id INTEGER PRIMARY KEY AUTOINCREMENT,
         book_id INTEGER NOT NULL,
