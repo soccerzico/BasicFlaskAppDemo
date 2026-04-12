@@ -10,7 +10,65 @@ app.config["DATABASE"] = "db/books.db"
 def get_db_connection():
     conn = sqlite3.connect(app.config["DATABASE"])
     return conn
+    
+@app.route('/api/books', methods=['GET'])
+def get_all_books():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM Books")
+        books = cursor.fetchall()
+        conn.close()
 
+        book_list = []
+        for book in books:
+            book_dict = {
+                'book_id': book[0],
+                'title': book[1],
+                'publication_year': book[2],
+                'book_author': book[3],
+                'url': book[4]
+            }
+            book_list.append(book_dict)
+
+        return jsonify({'books': book_list})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/search', methods=['GET'])
+def search_books():
+    try:
+        query = request.args.get('q', '').strip()
+
+        if not query:
+            return jsonify({'books': []})
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT * FROM Books
+            WHERE LOWER(title) LIKE ?
+               OR LOWER(book_author) LIKE ?
+        """, (f"%{query.lower()}%", f"%{query.lower()}%"))
+
+        books = cursor.fetchall()
+        conn.close()
+
+        book_list = []
+        for book in books:
+            book_dict = {
+                'book_id': book[0],
+                'title': book[1],
+                'publication_year': book[2],
+                'book_author': book[3],
+                'url': book[4]
+            }
+            book_list.append(book_dict)
+
+        return jsonify({'books': book_list})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 def init_db():
     os.makedirs("db", exist_ok=True)
