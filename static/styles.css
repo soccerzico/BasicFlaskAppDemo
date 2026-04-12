@@ -1,0 +1,164 @@
+/* Add styles for the button */
+#showBooksButton {
+  margin: 2px 2px;
+  background-color: #5c3d2e;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.title {
+text-align: center;
+font-size: 64;
+}
+#addReview {
+    width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 2px solid #53421a;
+    border-radius: 10px;
+    background-color: #9e794c;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#addReview input,
+#addReview textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#addReview button {
+    padding: 10px;
+    background-color: #5c3d2e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#showReviewsButton{
+  padding: 10px;
+  background-color: #5c3d2e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+}
+
+#reviewList {
+    width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 2px solid #53421a;
+    border-radius: 10px;
+    background-color: #d1a876;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+#reviewList{
+  text-align: center;
+  color:#3b2a1a;
+}
+
+
+#addReview button:hover {
+    background-color: #5c4c30;
+}
+.button-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;        /* space between buttons */
+  margin: 20px;
+  
+}
+
+
+body {
+  background-image: url("shelf2.png");
+  background-position: top left;
+  background-repeat: repeat;
+  font-family: 'Roboto', sans-serif;
+  color: #2b1b12;
+
+}
+
+#allbooks {
+  display: flex;
+  flex-wrap: wrap;   /* moves books to next row if needed */
+  gap: 10px 30px;         /* space between books */
+}
+
+.book img {
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.book img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.45);
+}
+.search-container {
+  margin: 2px 2px;  
+  justify-content: center;
+  display: flex;
+}
+
+.add-book-container {
+  margin: 2px 2px;
+  display: flex;
+  justify-content: center;
+}
+
+.add-book-button {
+  background-color: #5c3d2e;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-book-button:hover {
+  background-color: #7a523c;
+}
+
+.add-book-form {
+  display: none;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 8px;
+  width: 300px;
+  justify-content: center;
+}
+
+.add-book-form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+.add-book-form button {
+  background-color: #3b2a1a;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
