@@ -156,9 +156,9 @@ def add_review():
         cursor = conn.cursor()
 
         cursor.execute("""
-    INSERT INTO Reviews (book_id, user_id, rating, review_text, review_date)
+    INSERT INTO Reviews (book_id, user, rating, review_text, review_date)
     VALUES (?, ?, ?, ?, ?)
-""", (book_id, user_id, rating, comment, date.today().isoformat()))
+""", (book_id, user, rating, comment, date.today().isoformat()))
 
         conn.commit()
         conn.close()
