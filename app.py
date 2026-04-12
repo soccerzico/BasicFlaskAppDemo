@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import sqlite3
-import pymongo
+import os
 
 app = Flask(__name__)
 
@@ -11,100 +11,105 @@ def get_db_connection():
     conn = sqlite3.connect(app.config["DATABASE"])
     return conn
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client['reviews']  # MongoDB database
-reviews_collection = db['reviews']  # MongoDB collection for reviews
 
-@app.route('/api/books', methods=['GET'])
-def get_all_books():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Books")
-        books = cursor.fetchall()
-        conn.close()
+def init_db():
+    os.makedirs("db", exist_ok=True)
 
-        book_list = []
-        for book in books:
-            book_dict = {
-                'book_id': book[0],
-                'title': book[1],
-                'publication_year': book[2],
-                'book_author': book[3],
-                'url': book[4]
-            }
-            book_list.append(book_dict)
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-        return jsonify({'books': book_list})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    # Create Reviews table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            book_id TEXT NOT NULL,
+            user TEXT NOT NULL,
+            rating INTEGER NOT NULL,
+            comment TEXT
+        )
+    """)
+
+    # Check if table is empty
+    cursor.execute("SELECT COUNT(*) FROM Reviews")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+        print("Seeding initial reviews...")
+
+        seed_reviews = [
+            # Harry Potter
+            ("1", "Alice", 5, "Amazing world-building and characters!"),
+            ("1", "Bob", 4, "Loved it, but a bit slow at times."),
+            
+            # Maze Runner
+            ("2", "Charlie", 4, "Very suspenseful and intense."),
+            ("2", "Dana", 3, "Interesting concept but confusing at times."),
+            
+            # Percy Jackson
+            ("3", "Eve", 5, "Super fun and creative mythology twist!"),
+            ("3", "Frank", 4, "Great for younger audiences, still enjoyable.")
+        ]
+
+        cursor.executemany("""
+            INSERT INTO Reviews (book_id, user, rating, comment)
+            VALUES (?, ?, ?, ?)
+        """, seed_reviews)
+
+    conn.commit()
+    conn.close()
 
 
-@app.route('/api/search', methods=['GET'])
-def search_books():
-    try:
-        query = request.args.get('q', '').strip()
-
-        if not query:
-            return jsonify({'books': []})
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT * FROM Books
-            WHERE LOWER(title) LIKE ?
-               OR LOWER(book_author) LIKE ?
-        """, (f"%{query.lower()}%", f"%{query.lower()}%"))
-
-        books = cursor.fetchall()
-        conn.close()
-
-        book_list = []
-        for book in books:
-            book_dict = {
-                'book_id': book[0],
-                'title': book[1],
-                'publication_year': book[2],
-                'book_author': book[3],
-                'url': book[4]
-            }
-            book_list.append(book_dict)
-
-        return jsonify({'books': book_list})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-# API to get all reviews from MongoDB
 @app.route('/api/reviews', methods=['GET'])
 def get_all_reviews():
     try:
-        reviews = list(reviews_collection.find({}, {'_id': 0}))  # Get all reviews from MongoDB
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT book_id, user, rating, comment FROM Reviews")
+        rows = cursor.fetchall()
+        conn.close()
+
+        reviews = []
+        for row in rows:
+            reviews.append({
+                'book_id': row[0],
+                'user': row[1],
+                'rating': row[2],
+                'comment': row[3]
+            })
+
         return jsonify({'reviews': reviews})
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 500
 
-# API to add a new review to MongoDB
+
 @app.route('/api/add_review', methods=['POST'])
 def add_review():
     try:
-        data = request.get_json()  # Get review details from the request
+        data = request.get_json()
+
         book_id = data.get('book_id')
         user = data.get('user')
         rating = data.get('rating')
         comment = data.get('comment')
 
-        # Insert the review into the MongoDB collection
-        review = {
-            'book_id': book_id,
-            'user': user,
-            'rating': rating,
-            'comment': comment
-        }
-        reviews_collection.insert_one(review)
+        if not book_id or not user or rating is None:
+            return jsonify({'error': 'book_id, user, and rating are required'}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO Reviews (book_id, user, rating, comment)
+            VALUES (?, ?, ?, ?)
+        """, (book_id, user, rating, comment))
+
+        conn.commit()
+        conn.close()
 
         return jsonify({'message': 'Review added successfully'})
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/authors', methods=['GET'])
@@ -118,6 +123,7 @@ def get_all_authors():
         return jsonify(authors)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/add', methods=['POST'])
 def add_book():
@@ -148,5 +154,7 @@ def index():
     return render_template('index.html')
 
 
+init_db()
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
