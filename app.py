@@ -208,7 +208,7 @@ def add_book():
 
 @app.route('/')
 def index():
-    return render_template('index2.html')
+    return render_template('index.html')
 
 
 init_db()
