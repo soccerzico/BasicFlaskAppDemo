@@ -1,0 +1,69 @@
+<html>
+<style>
+</style>
+
+<head>
+    <title>Book Reviews</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <h1 class="title">Book Reviews</h1>
+    <div class="button-bar">
+        <button class="add-book-button" onclick="toggleAddBook()"> + Add Book </button>
+        <button id="showBooksButton" onclick="showAllBooks()">Show All Books</button>
+        <button class="add-book-button" onclick="toggleSearch()">Search Books</button>
+    </div>
+    <div class="search-container">
+    <div id="searchForm" class="add-book-form">
+        <input type="text" id="searchInput" placeholder="Search by title or author">
+        <button onclick="searchBooks()">Search</button>
+    </div>
+    </div>
+
+    <!-- Add a div to input book data -->
+    <div class="add-book-container">
+
+    <div id="addBookForm" class="add-book-form">
+        <input type="text" id="bookTitle" placeholder="Book Title">
+        <input type="text" id="publicationYear" placeholder="Publication Year">
+        <input type="text" id="bookAuthor" placeholder="Author">
+        <input type="text" id="imageUrl" placeholder="Cover Image URL">
+        <button onclick="addBook()">Submit</button>
+    </div>
+
+
+</div>
+
+    <!-- Display books in this div -->
+    <div id="bookList">
+        <!-- Book data will be displayed here dynamically -->
+    </div>
+
+    <!-- Display books in this div -->
+    <div id="allbooks">
+        <!-- Book data will be displayed here dynamically -->
+    </div>
+
+ <div id="addReview">
+        <h2>Add a Review</h2>
+        <input type="text" id="bookId" placeholder="Book ID">
+        <input type="text" id="userName" placeholder="Your Name">
+        <input type="number" id="rating" min="1" max="5" placeholder="Rating (1-5)">
+        <textarea id="comment" placeholder="Your review..."></textarea>
+        <button onclick="addReview()">Submit Review</button>
+    </div>
+<!-- Show All Reviews Button -->
+    <button id="showReviewsButton" onclick="showAllReviews()">Show All Reviews</button>
+    <!-- Review List -->
+    <div id="reviewList">
+        <h2>Reviews</h2>
+        Reviews will be dynamically displayed here -->
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body> 
+
+</html>
